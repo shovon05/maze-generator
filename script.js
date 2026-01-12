@@ -1,8 +1,14 @@
 const canvas = document.getElementById("mazeCanvas");
 const ctx = canvas.getContext("2d");
 
+const overlay = document.getElementById("resultOverlay");
+const timeText = document.getElementById("timeText");
+const scoreText = document.getElementById("scoreText");
+const replayBtn = document.getElementById("replayBtn");
+
 let maze;
 let cellSize = 25;
+let currentLevel = null;
 
 let gameStarted = false;
 let startTime = 0;
@@ -15,13 +21,26 @@ const levels = {
   hard: 40
 };
 
+const difficultyMultiplier = {
+  easy: 1,
+  medium: 2,
+  hard: 3
+};
+
 document.querySelectorAll("#menu button").forEach(button => {
   button.addEventListener("click", () => {
     startGame(button.dataset.level);
   });
 });
 
+replayBtn.addEventListener("click", () => {
+  overlay.classList.add("hidden");
+  startGame(currentLevel);
+});
+
 function startGame(level) {
+  currentLevel = level;
+
   const size = levels[level];
   cellSize = Math.floor(600 / size);
 
@@ -33,6 +52,7 @@ function startGame(level) {
   lastCell = null;
   pathPoints = [];
 
+  overlay.classList.add("hidden");
   drawAll();
 }
 
@@ -98,13 +118,13 @@ function drawLine(x1, y1, x2, y2) {
 }
 
 /* =============================
-   MOUSE / GAME LOGIC
+   GAME LOGIC
    ============================= */
 
 canvas.addEventListener("mousemove", handleMouseMove);
 
 function handleMouseMove(e) {
-  if (!maze) return;
+  if (!maze || overlay.classList.contains("hidden") === false) return;
 
   const rect = canvas.getBoundingClientRect();
   const x = e.clientX - rect.left;
@@ -120,7 +140,6 @@ function handleMouseMove(e) {
 
   const cell = maze.grid[maze.index(row, col)];
 
-  // Must start from green
   if (!gameStarted) {
     if (row !== 0 || col !== 0) return;
 
@@ -184,11 +203,11 @@ function isValidMove(from, to) {
 }
 
 /* =============================
-   RESET / FEEDBACK
+   END GAME
    ============================= */
 
 function showFailure(cell) {
-  ctx.fillStyle = "rgba(255, 0, 0, 0.4)";
+  ctx.fillStyle = "rgba(255,0,0,0.4)";
   ctx.fillRect(
     cell.col * cellSize,
     cell.row * cellSize,
@@ -205,7 +224,15 @@ function resetGame() {
 }
 
 function finishGame() {
-  const timeTaken = ((Date.now() - startTime) / 1000).toFixed(2);
-  alert(`Maze completed in ${timeTaken} seconds`);
+  const timeTaken = (Date.now() - startTime) / 1000;
+  const score = Math.max(
+    0,
+    Math.floor(1000 - timeTaken * 100 * difficultyMultiplier[currentLevel])
+  );
+
+  timeText.textContent = `Time: ${timeTaken.toFixed(2)} seconds`;
+  scoreText.textContent = `Score: ${score}`;
+
+  overlay.classList.remove("hidden");
   gameStarted = false;
 }
