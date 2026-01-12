@@ -7,6 +7,7 @@ let cellSize = 25;
 let gameStarted = false;
 let startTime = 0;
 let lastCell = null;
+let pathPoints = [];
 
 const levels = {
   easy: 10,
@@ -16,8 +17,7 @@ const levels = {
 
 document.querySelectorAll("#menu button").forEach(button => {
   button.addEventListener("click", () => {
-    const level = button.dataset.level;
-    startGame(level);
+    startGame(button.dataset.level);
   });
 });
 
@@ -31,14 +31,20 @@ function startGame(level) {
   maze = new Maze(size, size);
   gameStarted = false;
   lastCell = null;
+  pathPoints = [];
 
-  drawMaze();
-  drawStartAndEnd();
+  drawAll();
 }
 
 /* =============================
    DRAWING
    ============================= */
+
+function drawAll() {
+  drawMaze();
+  drawPath();
+  drawStartAndEnd();
+}
 
 function drawMaze() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -56,12 +62,25 @@ function drawMaze() {
   });
 }
 
+function drawPath() {
+  if (pathPoints.length < 2) return;
+
+  ctx.strokeStyle = "blue";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(pathPoints[0].x, pathPoints[0].y);
+
+  for (let i = 1; i < pathPoints.length; i++) {
+    ctx.lineTo(pathPoints[i].x, pathPoints[i].y);
+  }
+
+  ctx.stroke();
+}
+
 function drawStartAndEnd() {
-  // Start
   ctx.fillStyle = "green";
   ctx.fillRect(2, 2, cellSize - 4, cellSize - 4);
 
-  // End
   ctx.fillStyle = "red";
   ctx.fillRect(
     (maze.cols - 1) * cellSize + 2,
@@ -101,43 +120,37 @@ function handleMouseMove(e) {
 
   const cell = maze.grid[maze.index(row, col)];
 
-  // Must start from green cell
+  // Must start from green
   if (!gameStarted) {
     if (row !== 0 || col !== 0) return;
 
     gameStarted = true;
     startTime = Date.now();
     lastCell = cell;
+    pathPoints.push({ x, y });
+    drawAll();
     return;
   }
 
-  // Wall collision (fine-grained)
   if (isTouchingWall(x, y, cell)) {
     showFailure(cell);
     resetGame();
     return;
   }
 
-  // Enforce adjacency
   const dr = Math.abs(cell.row - lastCell.row);
   const dc = Math.abs(cell.col - lastCell.col);
 
-  if (dr + dc > 1) {
-    showFailure(cell);
-    resetGame();
-    return;
-  }
-
-  // Enforce open wall movement
-  if (!isValidMove(lastCell, cell)) {
+  if (dr + dc > 1 || !isValidMove(lastCell, cell)) {
     showFailure(cell);
     resetGame();
     return;
   }
 
   lastCell = cell;
+  pathPoints.push({ x, y });
+  drawAll();
 
-  // Finish check
   if (row === maze.rows - 1 && col === maze.cols - 1) {
     finishGame();
   }
@@ -171,7 +184,7 @@ function isValidMove(from, to) {
 }
 
 /* =============================
-   FEEDBACK / RESET
+   RESET / FEEDBACK
    ============================= */
 
 function showFailure(cell) {
@@ -187,13 +200,12 @@ function showFailure(cell) {
 function resetGame() {
   gameStarted = false;
   lastCell = null;
-  drawMaze();
-  drawStartAndEnd();
+  pathPoints = [];
+  drawAll();
 }
 
 function finishGame() {
   const timeTaken = ((Date.now() - startTime) / 1000).toFixed(2);
   alert(`Maze completed in ${timeTaken} seconds`);
   gameStarted = false;
-  lastCell = null;
 }
