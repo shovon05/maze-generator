@@ -3,30 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <title>Maze Generator</title>
+
+  <!-- Modern macOS-like font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="style.css" />
 </head>
-  <div id="resultOverlay" class="hidden">
-  <div id="resultBox">
-    <h2>Maze Completed 🎉</h2>
-    <p id="timeText"></p>
-    <p id="scoreText"></p>
-    <button id="replayBtn">Replay</button>
-  </div>
-</div>
 
 <body>
-  <h1>Maze Generator</h1>
-<p>Select a difficulty to start</p>
 
+  <!-- HEADER -->
+  <h1>Maze Generator</h1>
+  <p class="subtitle">Trace the path. Don’t touch the walls.</p>
+
+  <!-- DIFFICULTY MENU -->
   <div id="menu">
     <button data-level="easy">Easy</button>
     <button data-level="medium">Medium</button>
     <button data-level="hard">Hard</button>
   </div>
 
+  <!-- CANVAS -->
   <canvas id="mazeCanvas"></canvas>
 
+  <!-- RESULT OVERLAY -->
+  <div id="resultOverlay" class="hidden">
+    <div id="resultBox">
+      <h2>Maze Completed 🎉</h2>
+      <p id="timeText"></p>
+      <p id="scoreText"></p>
+      <button id="replayBtn">Replay</button>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
   <script src="maze.js"></script>
   <script src="script.js"></script>
+
 </body>
 </html>
