@@ -1,6 +1,8 @@
 const canvas = document.getElementById("mazeCanvas");
 const ctx = canvas.getContext("2d");
 
+let lastCell = null;
+
 let maze;
 let cellSize = 25;
 let gameStarted = false;
