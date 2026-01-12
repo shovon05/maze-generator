@@ -4,7 +4,14 @@ const ctx = canvas.getContext("2d");
 const overlay = document.getElementById("resultOverlay");
 const timeText = document.getElementById("timeText");
 const scoreText = document.getElementById("scoreText");
+const highScoreText = document.getElementById("highScoreText");
 const replayBtn = document.getElementById("replayBtn");
+
+/* =============================
+   INITIAL STATE
+   ============================= */
+
+overlay.classList.add("hidden");
 
 let maze;
 let cellSize = 25;
@@ -14,6 +21,10 @@ let gameStarted = false;
 let startTime = 0;
 let lastCell = null;
 let pathPoints = [];
+
+/* =============================
+   CONFIG
+   ============================= */
 
 const levels = {
   easy: 10,
@@ -27,6 +38,10 @@ const difficultyMultiplier = {
   hard: 3
 };
 
+/* =============================
+   EVENTS
+   ============================= */
+
 document.querySelectorAll("#menu button").forEach(button => {
   button.addEventListener("click", () => {
     startGame(button.dataset.level);
@@ -38,6 +53,10 @@ replayBtn.addEventListener("click", () => {
   startGame(currentLevel);
 });
 
+/* =============================
+   GAME SETUP
+   ============================= */
+
 function startGame(level) {
   currentLevel = level;
 
@@ -48,6 +67,7 @@ function startGame(level) {
   canvas.height = size * cellSize;
 
   maze = new Maze(size, size);
+
   gameStarted = false;
   lastCell = null;
   pathPoints = [];
@@ -82,19 +102,27 @@ function drawMaze() {
   });
 }
 
+/* === GLOWING PATH === */
 function drawPath() {
   if (pathPoints.length < 2) return;
 
-  ctx.strokeStyle = "blue";
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(pathPoints[0].x, pathPoints[0].y);
-
   for (let i = 1; i < pathPoints.length; i++) {
-    ctx.lineTo(pathPoints[i].x, pathPoints[i].y);
+    const prev = pathPoints[i - 1];
+    const curr = pathPoints[i];
+    const alpha = i / pathPoints.length;
+
+    ctx.strokeStyle = `rgba(76, 201, 240, ${alpha})`;
+    ctx.lineWidth = 4;
+    ctx.shadowColor = "rgba(255, 110, 199, 0.6)";
+    ctx.shadowBlur = 12;
+
+    ctx.beginPath();
+    ctx.moveTo(prev.x, prev.y);
+    ctx.lineTo(curr.x, curr.y);
+    ctx.stroke();
   }
 
-  ctx.stroke();
+  ctx.shadowBlur = 0;
 }
 
 function drawStartAndEnd() {
@@ -124,7 +152,7 @@ function drawLine(x1, y1, x2, y2) {
 canvas.addEventListener("mousemove", handleMouseMove);
 
 function handleMouseMove(e) {
-  if (!maze || overlay.classList.contains("hidden") === false) return;
+  if (!maze || !overlay.classList.contains("hidden")) return;
 
   const rect = canvas.getBoundingClientRect();
   const x = e.clientX - rect.left;
@@ -167,7 +195,13 @@ function handleMouseMove(e) {
   }
 
   lastCell = cell;
-  pathPoints.push({ x, y });
+
+  // Smooth sampling
+  const lastPoint = pathPoints[pathPoints.length - 1];
+  if (!lastPoint || Math.hypot(lastPoint.x - x, lastPoint.y - y) > 3) {
+    pathPoints.push({ x, y });
+  }
+
   drawAll();
 
   if (row === maze.rows - 1 && col === maze.cols - 1) {
@@ -232,6 +266,16 @@ function finishGame() {
 
   timeText.textContent = `Time: ${timeTaken.toFixed(2)} seconds`;
   scoreText.textContent = `Score: ${score}`;
+
+  const key = `mazeHighScore_${currentLevel}`;
+  const best = localStorage.getItem(key);
+
+  if (!best || score > best) {
+    localStorage.setItem(key, score);
+    highScoreText.textContent = "🏆 New High Score!";
+  } else {
+    highScoreText.textContent = `High Score: ${best}`;
+  }
 
   overlay.classList.remove("hidden");
   gameStarted = false;
