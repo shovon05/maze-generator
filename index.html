@@ -2,43 +2,63 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Maze Generator</title>
 
-  <!-- Modern macOS-like font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Modern macOS-style font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
 
+  <!-- Main stylesheet -->
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <h1>Maze Generator</h1>
-  <p class="subtitle">Trace the path. Don’t touch the walls.</p>
+  <!-- =============================
+       APP HEADER
+       ============================= -->
+  <header>
+    <h1>Maze Generator</h1>
+    <p class="subtitle">Trace the path. Don’t touch the walls.</p>
+  </header>
 
-  <!-- DIFFICULTY MENU -->
-  <div id="menu">
+  <!-- =============================
+       DIFFICULTY SELECTION
+       ============================= -->
+  <nav id="menu" aria-label="Difficulty selection">
     <button data-level="easy">Easy</button>
     <button data-level="medium">Medium</button>
     <button data-level="hard">Hard</button>
-  </div>
+  </nav>
 
-  <!-- CANVAS -->
-  <canvas id="mazeCanvas"></canvas>
+  <!-- =============================
+       GAME CANVAS
+       ============================= -->
+  <main>
+    <canvas id="mazeCanvas" aria-label="Maze canvas"></canvas>
+  </main>
 
-  <!-- RESULT OVERLAY -->
-  <div id="resultOverlay" class="hidden">
-    <div id="resultBox">
+  <!-- =============================
+       RESULT OVERLAY (hidden by default)
+       ============================= -->
+  <div id="resultOverlay" class="hidden" aria-hidden="true">
+    <div id="resultBox" role="dialog" aria-modal="true">
       <h2>Maze Completed 🎉</h2>
       <p id="timeText"></p>
       <p id="scoreText"></p>
+      <p id="highScoreText"></p>
       <button id="replayBtn">Replay</button>
     </div>
   </div>
 
-  <!-- SCRIPTS -->
+  <!-- =============================
+       SCRIPTS
+       ============================= -->
   <script src="maze.js"></script>
   <script src="script.js"></script>
 
