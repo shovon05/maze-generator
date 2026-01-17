@@ -3,122 +3,77 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Maze Generator</title>
-
-  <!-- macOS / iOS system font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
-    rel="stylesheet"
-  />
+  <title>🧩 Maze Generator</title>
 
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
-  <!-- =============================
-       HEADER
-       ============================= -->
+  <!-- HEADER -->
   <header>
-    <h1>Maze Generator</h1>
-    <p class="subtitle">Trace the path. Don’t touch the walls.</p>
+    <h1>🧩 Maze Generator</h1>
+    <p class="subtitle">🖱️ Trace the path · 🚫 Don’t touch the walls</p>
   </header>
 
-  <!-- =============================
-       TOP ACTIONS
-       ============================= -->
+  <!-- TOP ACTIONS -->
   <div id="topActions">
-    <!-- Hidden by default via CSS / JS -->
-    <button id="printBtn" title="Print Maze">🖨️ Print</button>
-
-    <a href="guide.html" id="guideLink" target="_blank">
-      📘 How to Solve
-    </a>
+    <button id="printBtn">🖨️ Print</button>
+    <button id="guideBtn">📘 How to Solve</button>
   </div>
 
-  <!-- =============================
-       DIFFICULTY SELECTION
-       ============================= -->
-  <nav id="menu" aria-label="Difficulty selection">
-    <button data-level="easy">Easy</button>
-    <button data-level="medium">Medium</button>
-    <button data-level="hard">Hard</button>
+  <!-- DIFFICULTY MENU -->
+  <nav id="menu">
+    <button data-level="easy">🟢 Easy</button>
+    <button data-level="medium">🟡 Medium</button>
+    <button data-level="hard">🔴 Hard</button>
   </nav>
 
-  <!-- =============================
-       GAME AREA
-       ============================= -->
+  <!-- GAME -->
   <main>
-    <!-- Canvas exists but will be hidden until maze is generated -->
-    <canvas id="mazeCanvas" aria-label="Maze canvas"></canvas>
+    <canvas id="mazeCanvas"></canvas>
   </main>
 
-  <!-- =============================
-       RESULT OVERLAY
-       ============================= -->
-  <div id="resultOverlay" class="hidden" aria-hidden="true">
-    <div id="resultBox" role="dialog" aria-modal="true">
-      <h2>Maze Completed 🎉</h2>
+  <!-- RESULT POPUP -->
+  <div id="resultOverlay" class="hidden">
+    <div id="resultBox">
+      <h2>🎉 Maze Completed!</h2>
       <p id="timeText"></p>
       <p id="scoreText"></p>
       <p id="highScoreText"></p>
-      <button id="replayBtn">Replay</button>
+      <button id="replayBtn">🔄 Replay</button>
     </div>
   </div>
 
-  <!-- =============================
-       FOOTER
-       ============================= -->
+  <!-- GUIDE POPUP -->
+  <div id="guideOverlay" class="hidden">
+    <div id="guideBox">
+      <h2>📘 How to Solve the Maze</h2>
+
+      <ul>
+        <li>🟢 Start from the green cell</li>
+        <li>🔴 Finish at the red cell</li>
+        <li>➡️ Move only up, down, left, or right</li>
+        <li>🚫 Do not cross or touch walls</li>
+        <li>🔁 You may backtrack if needed</li>
+        <li>❌ Diagonal moves are not allowed</li>
+      </ul>
+
+      <p>✅ A solution is valid only if all rules are followed.</p>
+
+      <button id="closeGuideBtn">❌ Close</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
   <footer>
     <p>
-      Built by <strong>Shovon</strong> ·
-      <a href="https://github.com/shovon05" target="_blank">
-        GitHub Profile
-      </a>
+      👨‍💻 Built by <strong>Shovon</strong> ·
+      <a href="https://github.com/shovon05" target="_blank">🐙 GitHub</a>
     </p>
   </footer>
 
-  <!-- =============================
-       SCRIPTS
-       ============================= -->
   <script src="maze.js"></script>
   <script src="script.js"></script>
-<!-- =============================
-     PRINT-ONLY GUIDE (PAGE 2)
-     ============================= -->
-<div id="printGuide" class="print-only">
-  <h1>Maze Solving Rulebook</h1>
-
-  <h3>Purpose</h3>
-  <p>
-    Identify a continuous, valid path from the designated start point
-    to the designated exit point while strictly following the rules.
-  </p>
-
-  <h3>Rules</h3>
-  <ul>
-    <li>Start from the green cell</li>
-    <li>Finish at the red cell</li>
-    <li>No wall crossing</li>
-    <li>No diagonal movement</li>
-    <li>Stay inside corridors at all times</li>
-  </ul>
-
-  <h3>Validity</h3>
-  <p>
-    A solution is valid only if it starts correctly, ends correctly,
-    and respects all movement rules.
-  </p>
-
-  <footer>
-    <p>
-      Author: <strong>Shovon</strong><br />
-      GitHub: https://github.com/shovon05
-    </p>
-  </footer>
-</div>
-
 </body>
 </html>
