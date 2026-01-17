@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Maze Generator</title>
 
-  <!-- Modern macOS-style font -->
+  <!-- Modern macOS-like font -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -20,12 +20,20 @@
 <body>
 
   <!-- =============================
-       APP HEADER
+       HEADER
        ============================= -->
   <header>
     <h1>Maze Generator</h1>
     <p class="subtitle">Trace the path. Don’t touch the walls.</p>
   </header>
+
+  <!-- =============================
+       TOP ACTIONS (PRINT + GUIDE)
+       ============================= -->
+  <div id="topActions">
+    <button id="printBtn" title="Print Maze">🖨️ Print</button>
+    <a href="guide.html" id="guideLink" target="_blank">📘 How to Solve</a>
+  </div>
 
   <!-- =============================
        DIFFICULTY SELECTION
@@ -44,7 +52,7 @@
   </main>
 
   <!-- =============================
-       RESULT OVERLAY (hidden by default)
+       RESULT OVERLAY (HIDDEN)
        ============================= -->
   <div id="resultOverlay" class="hidden" aria-hidden="true">
     <div id="resultBox" role="dialog" aria-modal="true">
@@ -55,6 +63,18 @@
       <button id="replayBtn">Replay</button>
     </div>
   </div>
+
+  <!-- =============================
+       FOOTER
+       ============================= -->
+  <footer>
+    <p>
+      Built by <strong>Shovon</strong> ·
+      <a href="https://shovon05.github.io/maze-generator/" target="_blank">
+        Project Website
+      </a>
+    </p>
+  </footer>
 
   <!-- =============================
        SCRIPTS

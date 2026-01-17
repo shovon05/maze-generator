@@ -6,6 +6,7 @@ const timeText = document.getElementById("timeText");
 const scoreText = document.getElementById("scoreText");
 const highScoreText = document.getElementById("highScoreText");
 const replayBtn = document.getElementById("replayBtn");
+const printBtn = document.getElementById("printBtn");
 
 /* =============================
    INITIAL STATE
@@ -43,17 +44,30 @@ const difficultyMultiplier = {
    EVENTS
    ============================= */
 
+// Difficulty buttons
 document.querySelectorAll("#menu button").forEach(button => {
   button.addEventListener("click", () => {
     startGame(button.dataset.level);
   });
 });
 
+// Replay
 replayBtn.addEventListener("click", () => {
   overlay.classList.add("hidden");
   gameFinished = false;
   startGame(currentLevel);
 });
+
+// PRINT / PDF
+if (printBtn) {
+  printBtn.addEventListener("click", () => {
+    if (!maze) {
+      alert("Please generate a maze before printing.");
+      return;
+    }
+    window.print(); // Opens system print dialog / Save as PDF
+  });
+}
 
 /* =============================
    GAME SETUP
@@ -172,7 +186,7 @@ function handleMouseMove(e) {
 
   const cell = maze.grid[maze.index(row, col)];
 
-  /* Must start from green cell */
+  // Must start from green cell
   if (!gameStarted) {
     if (row !== 0 || col !== 0) return;
 
@@ -184,14 +198,14 @@ function handleMouseMove(e) {
     return;
   }
 
-  /* Wall collision */
+  // Wall collision
   if (isTouchingWall(x, y, cell)) {
     showFailure(cell);
     resetGame();
     return;
   }
 
-  /* Enforce adjacency and valid wall */
+  // Enforce adjacency & valid wall
   const dr = Math.abs(cell.row - lastCell.row);
   const dc = Math.abs(cell.col - lastCell.col);
 
@@ -203,7 +217,7 @@ function handleMouseMove(e) {
 
   lastCell = cell;
 
-  /* Smooth path sampling */
+  // Smooth sampling
   const lastPoint = pathPoints[pathPoints.length - 1];
   if (!lastPoint || Math.hypot(lastPoint.x - x, lastPoint.y - y) > 3) {
     pathPoints.push({ x, y });
@@ -211,7 +225,7 @@ function handleMouseMove(e) {
 
   drawAll();
 
-  /* Finish */
+  // Finish
   if (row === maze.rows - 1 && col === maze.cols - 1) {
     finishGame();
   }
