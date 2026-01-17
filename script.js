@@ -11,13 +11,14 @@ const replayBtn = document.getElementById("replayBtn");
    INITIAL STATE
    ============================= */
 
-overlay.classList.add("hidden");
+if (overlay) overlay.classList.add("hidden");
 
 let maze;
 let cellSize = 25;
 let currentLevel = null;
 
 let gameStarted = false;
+let gameFinished = false;
 let startTime = 0;
 let lastCell = null;
 let pathPoints = [];
@@ -50,6 +51,7 @@ document.querySelectorAll("#menu button").forEach(button => {
 
 replayBtn.addEventListener("click", () => {
   overlay.classList.add("hidden");
+  gameFinished = false;
   startGame(currentLevel);
 });
 
@@ -69,6 +71,7 @@ function startGame(level) {
   maze = new Maze(size, size);
 
   gameStarted = false;
+  gameFinished = false;
   lastCell = null;
   pathPoints = [];
 
@@ -102,7 +105,7 @@ function drawMaze() {
   });
 }
 
-/* === GLOWING PATH === */
+/* === GLOWING MOUSE PATH === */
 function drawPath() {
   if (pathPoints.length < 2) return;
 
@@ -113,6 +116,7 @@ function drawPath() {
 
     ctx.strokeStyle = `rgba(76, 201, 240, ${alpha})`;
     ctx.lineWidth = 4;
+    ctx.lineCap = "round";
     ctx.shadowColor = "rgba(255, 110, 199, 0.6)";
     ctx.shadowBlur = 12;
 
@@ -152,7 +156,7 @@ function drawLine(x1, y1, x2, y2) {
 canvas.addEventListener("mousemove", handleMouseMove);
 
 function handleMouseMove(e) {
-  if (!maze || !overlay.classList.contains("hidden")) return;
+  if (!maze || gameFinished) return;
 
   const rect = canvas.getBoundingClientRect();
   const x = e.clientX - rect.left;
@@ -168,6 +172,7 @@ function handleMouseMove(e) {
 
   const cell = maze.grid[maze.index(row, col)];
 
+  /* Must start from green cell */
   if (!gameStarted) {
     if (row !== 0 || col !== 0) return;
 
@@ -179,12 +184,14 @@ function handleMouseMove(e) {
     return;
   }
 
+  /* Wall collision */
   if (isTouchingWall(x, y, cell)) {
     showFailure(cell);
     resetGame();
     return;
   }
 
+  /* Enforce adjacency and valid wall */
   const dr = Math.abs(cell.row - lastCell.row);
   const dc = Math.abs(cell.col - lastCell.col);
 
@@ -196,7 +203,7 @@ function handleMouseMove(e) {
 
   lastCell = cell;
 
-  // Smooth sampling
+  /* Smooth path sampling */
   const lastPoint = pathPoints[pathPoints.length - 1];
   if (!lastPoint || Math.hypot(lastPoint.x - x, lastPoint.y - y) > 3) {
     pathPoints.push({ x, y });
@@ -204,6 +211,7 @@ function handleMouseMove(e) {
 
   drawAll();
 
+  /* Finish */
   if (row === maze.rows - 1 && col === maze.cols - 1) {
     finishGame();
   }
@@ -237,11 +245,11 @@ function isValidMove(from, to) {
 }
 
 /* =============================
-   END GAME
+   END GAME / RESET
    ============================= */
 
 function showFailure(cell) {
-  ctx.fillStyle = "rgba(255,0,0,0.4)";
+  ctx.fillStyle = "rgba(255, 0, 0, 0.4)";
   ctx.fillRect(
     cell.col * cellSize,
     cell.row * cellSize,
@@ -258,11 +266,14 @@ function resetGame() {
 }
 
 function finishGame() {
+  gameFinished = true;
+
   const timeTaken = (Date.now() - startTime) / 1000;
-  const score = Math.max(
-    0,
-    Math.floor(1000 - timeTaken * 100 * difficultyMultiplier[currentLevel])
+
+  let score = Math.floor(
+    1000 - timeTaken * 100 * difficultyMultiplier[currentLevel]
   );
+  score = Math.max(score, 0);
 
   timeText.textContent = `Time: ${timeTaken.toFixed(2)} seconds`;
   scoreText.textContent = `Score: ${score}`;
@@ -278,5 +289,4 @@ function finishGame() {
   }
 
   overlay.classList.remove("hidden");
-  gameStarted = false;
 }

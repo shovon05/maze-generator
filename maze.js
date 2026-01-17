@@ -9,12 +9,18 @@ class Maze {
     this.generateMaze();
   }
 
+  /* =============================
+     GRID INITIALIZATION
+     ============================= */
+
   initGrid() {
-    for (let r = 0; r < this.rows; r++) {
-      for (let c = 0; c < this.cols; c++) {
+    this.grid = [];
+
+    for (let row = 0; row < this.rows; row++) {
+      for (let col = 0; col < this.cols; col++) {
         this.grid.push({
-          row: r,
-          col: c,
+          row,
+          col,
           visited: false,
           walls: {
             top: true,
@@ -27,6 +33,10 @@ class Maze {
     }
   }
 
+  /* =============================
+     INDEX HELPER
+     ============================= */
+
   index(row, col) {
     if (row < 0 || col < 0 || row >= this.rows || col >= this.cols) {
       return -1;
@@ -34,9 +44,12 @@ class Maze {
     return row * this.cols + col;
   }
 
-  getNeighbors(cell) {
-    const neighbors = [];
+  /* =============================
+     NEIGHBOR CHECK
+     ============================= */
 
+  getUnvisitedNeighbors(cell) {
+    const neighbors = [];
     const { row, col } = cell;
 
     const top = this.grid[this.index(row - 1, col)];
@@ -51,6 +64,10 @@ class Maze {
 
     return neighbors;
   }
+
+  /* =============================
+     WALL REMOVAL
+     ============================= */
 
   removeWalls(current, next) {
     const dx = current.col - next.col;
@@ -73,22 +90,30 @@ class Maze {
     }
   }
 
+  /* =============================
+     MAZE GENERATION (DFS)
+     ============================= */
+
   generateMaze() {
     let current = this.grid[0];
     current.visited = true;
+    this.stack.push(current);
 
-    do {
-      const neighbors = this.getNeighbors(current);
+    while (this.stack.length > 0) {
+      const neighbors = this.getUnvisitedNeighbors(current);
 
       if (neighbors.length > 0) {
-        const next = neighbors[Math.floor(Math.random() * neighbors.length)];
-        this.stack.push(current);
+        const next =
+          neighbors[Math.floor(Math.random() * neighbors.length)];
+
         this.removeWalls(current, next);
+
+        next.visited = true;
+        this.stack.push(current);
         current = next;
-        current.visited = true;
-      } else if (this.stack.length > 0) {
+      } else {
         current = this.stack.pop();
       }
-    } while (this.stack.length > 0);
+    }
   }
 }

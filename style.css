@@ -1,5 +1,5 @@
 /* =============================
-   ANIMATIONS
+   KEYFRAMES
    ============================= */
 
 @keyframes gradientFlow {
@@ -37,9 +37,18 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+/* =============================
+   BODY / BACKGROUND
+   ============================= */
+
 body {
   margin: 0;
-  min-height: 100vh;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
 
   background: linear-gradient(
@@ -64,16 +73,21 @@ body {
    HEADER
    ============================= */
 
+header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
 h1 {
+  margin: 0;
   font-weight: 600;
   letter-spacing: 0.6px;
-  margin-bottom: 6px;
 }
 
 .subtitle {
+  margin-top: 6px;
   font-size: 14px;
   color: var(--text-muted);
-  margin-bottom: 22px;
 }
 
 /* =============================
@@ -82,12 +96,12 @@ h1 {
 
 #menu {
   display: flex;
-  gap: 12px;
-  margin-bottom: 22px;
+  gap: 14px;
+  margin-bottom: 20px;
 }
 
 #menu button {
-  padding: 10px 24px;
+  padding: 10px 26px;
   border-radius: 14px;
   border: 1px solid var(--panel-border);
   background: var(--panel-bg);
@@ -126,13 +140,17 @@ canvas {
 #resultOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(10, 10, 30, 0.7);
+  background: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(10px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 999;
 }
+
+/* =============================
+   RESULT BOX
+   ============================= */
 
 #resultBox {
   background: linear-gradient(
@@ -160,6 +178,10 @@ canvas {
   color: var(--text-muted);
 }
 
+/* =============================
+   REPLAY BUTTON
+   ============================= */
+
 #resultBox button {
   margin-top: 20px;
   padding: 10px 28px;
@@ -179,7 +201,7 @@ canvas {
 }
 
 /* =============================
-   IMPORTANT: HIDDEN OVERRIDE
+   HIDDEN (CRITICAL)
    ============================= */
 
 .hidden {
