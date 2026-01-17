@@ -11,6 +11,7 @@ const scoreText = document.getElementById("scoreText");
 const highScoreText = document.getElementById("highScoreText");
 const replayBtn = document.getElementById("replayBtn");
 const printBtn = document.getElementById("printBtn");
+const guideLink = document.getElementById("guideLink");
 
 /* =============================
    INITIAL STATE
@@ -19,6 +20,7 @@ const printBtn = document.getElementById("printBtn");
 overlay.classList.add("hidden");
 canvas.style.display = "none";
 printBtn.style.display = "none";
+guideLink.style.display = "none";
 
 let maze = null;
 let cellSize = 25;
@@ -57,16 +59,16 @@ document.querySelectorAll("#menu button").forEach(button => {
   });
 });
 
-// Replay button
+// Replay
 replayBtn.addEventListener("click", () => {
   overlay.classList.add("hidden");
   gameFinished = false;
   startGame(currentLevel);
 });
 
-// Print button (Maze page 1 + Guide page 2)
+// Print (Maze page 1 + Guide page 2)
 printBtn.addEventListener("click", () => {
-  if (!maze) return; // safety guard
+  if (!maze) return;
   window.print();
 });
 
@@ -90,10 +92,12 @@ function startGame(level) {
   lastCell = null;
   pathPoints = [];
 
+  // Show game-related UI
   canvas.style.display = "block";
   printBtn.style.display = "inline-flex";
-  overlay.classList.add("hidden");
+  guideLink.style.display = "inline-flex";
 
+  overlay.classList.add("hidden");
   drawAll();
 }
 
@@ -123,7 +127,7 @@ function drawMaze() {
   });
 }
 
-// Glowing mouse path
+// Mouse path (glow)
 function drawPath() {
   if (pathPoints.length < 2) return;
 
@@ -209,7 +213,7 @@ function handleMouseMove(e) {
     return;
   }
 
-  // Enforce adjacency & valid wall
+  // Enforce valid adjacency
   const dr = Math.abs(cell.row - lastCell.row);
   const dc = Math.abs(cell.col - lastCell.col);
 
@@ -280,7 +284,11 @@ function resetGame() {
   gameStarted = false;
   lastCell = null;
   pathPoints = [];
+
+  // Hide contextual actions again
   printBtn.style.display = "none";
+  guideLink.style.display = "none";
+
   drawAll();
 }
 

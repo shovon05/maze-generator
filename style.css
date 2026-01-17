@@ -260,43 +260,20 @@ footer a:hover {
 }
 
 /* =============================
-   PRINT STYLES
+   INITIAL VISIBILITY RULES
    ============================= */
 
-@media print {
-  body {
-    background: white !important;
-    animation: none !important;
-    color: black !important;
-    font-family: -apple-system, BlinkMacSystemFont,
-                 "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-  }
-
-  header,
-  #menu,
-  #topActions,
-  footer,
-  #resultOverlay {
-    display: none !important;
-  }
-
-  #mazeCanvas {
-    display: block !important;
-    box-shadow: none !important;
-    border-radius: 0;
-  }
-}
-
-/* =============================
-   PRINT BUTTON VISIBILITY
-   ============================= */
-
-/* Hidden until maze is generated (JS will show it) */
+/* Hidden until maze is generated (JS controls visibility) */
 #printBtn {
   display: none;
 }
+
+#guideLink {
+  display: none;
+}
+
 /* =============================
-   PRINT: MAZE + GUIDE (2 PAGES)
+   PRINT STYLES
    ============================= */
 
 .print-only {
@@ -306,8 +283,8 @@ footer a:hover {
 @media print {
   body {
     background: white !important;
-    color: black !important;
     animation: none !important;
+    color: black !important;
     font-family: -apple-system, BlinkMacSystemFont,
                  "SF Pro Text", "SF Pro Display",
                  "Helvetica Neue", Arial, sans-serif;
@@ -321,15 +298,13 @@ footer a:hover {
     display: none !important;
   }
 
-  /* PAGE 1 — Maze */
   #mazeCanvas {
     display: block !important;
-    page-break-after: always;
     box-shadow: none !important;
     border-radius: 0;
+    page-break-after: always;
   }
 
-  /* PAGE 2 — Guide */
   .print-only {
     display: block;
     page-break-before: always;
