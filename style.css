@@ -1,35 +1,4 @@
 /* =============================
-   KEYFRAMES
-   ============================= */
-
-@keyframes gradientFlow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* =============================
-   THEME VARIABLES
-   ============================= */
-
-:root {
-  --pink: #ff6ec7;
-  --blue: #4cc9f0;
-
-  --text-main: #f5f7ff;
-  --text-muted: #aab0ff;
-
-  --panel-bg: rgba(255, 255, 255, 0.08);
-  --panel-border: rgba(255, 255, 255, 0.18);
-}
-
-/* =============================
    RESET
    ============================= */
 
@@ -39,9 +8,25 @@
 
 html,
 body {
+  margin: 0;
+  padding: 0;
   width: 100%;
   height: 100%;
-  margin: 0;
+}
+
+/* =============================
+   ROOT VARIABLES
+   ============================= */
+
+:root {
+  --pink: #ff6ec7;
+  --blue: #4cc9f0;
+
+  --text-main: #f5f7ff;
+  --text-muted: #b8c0ff;
+
+  --panel-bg: rgba(255, 255, 255, 0.1);
+  --panel-border: rgba(255, 255, 255, 0.25);
 }
 
 /* =============================
@@ -49,12 +34,14 @@ body {
    ============================= */
 
 body {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont,
+               "SF Pro Text", "SF Pro Display",
+               "Helvetica Neue", Arial, sans-serif;
 
   background: linear-gradient(
     -45deg,
-    #0f1020,
-    #1a1b3a,
+    #1b103a,
+    #2a145f,
     #3a1c5c,
     #0b3c5d
   );
@@ -70,6 +57,22 @@ body {
 }
 
 /* =============================
+   BACKGROUND ANIMATION
+   ============================= */
+
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* =============================
    HEADER
    ============================= */
 
@@ -80,37 +83,38 @@ header {
 
 h1 {
   margin: 0;
+  font-size: 38px;
   font-weight: 600;
   letter-spacing: 0.6px;
 }
 
 .subtitle {
-  margin-top: 6px;
-  font-size: 14px;
+  margin-top: 8px;
+  font-size: 15px;
   color: var(--text-muted);
 }
 
 /* =============================
-   TOP ACTIONS (PRINT / GUIDE)
+   TOP ACTIONS
    ============================= */
 
 #topActions {
   display: flex;
   gap: 14px;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 #topActions button,
 #topActions a {
-  padding: 8px 18px;
-  border-radius: 12px;
+  padding: 10px 22px;
+  border-radius: 16px;
   border: 1px solid var(--panel-border);
   background: var(--panel-bg);
   color: var(--text-main);
   font-size: 14px;
   cursor: pointer;
   text-decoration: none;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
   transition: all 0.25s ease;
 }
 
@@ -127,40 +131,41 @@ h1 {
 
 #menu {
   display: flex;
-  gap: 14px;
-  margin-bottom: 20px;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
 #menu button {
-  padding: 10px 26px;
-  border-radius: 14px;
+  padding: 12px 30px;
+  border-radius: 20px;
   border: 1px solid var(--panel-border);
   background: var(--panel-bg);
   color: var(--text-main);
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
   cursor: pointer;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
   transition: all 0.25s ease;
 }
 
 #menu button:hover {
-  transform: translateY(-2px);
   background: linear-gradient(135deg, var(--pink), var(--blue));
   color: #000;
+  transform: translateY(-2px);
 }
 
 /* =============================
    CANVAS
    ============================= */
 
-canvas {
-  margin-top: 6px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.95);
-
+/* Hidden until maze is generated */
+#mazeCanvas {
+  display: none;
+  margin-top: 10px;
+  border-radius: 22px;
+  background: #ffffff;
   box-shadow:
-    0 25px 50px rgba(0, 0, 0, 0.6),
+    0 25px 50px rgba(0, 0, 0, 0.55),
     inset 0 0 0 1px rgba(255, 255, 255, 0.25);
 }
 
@@ -172,11 +177,15 @@ canvas {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 999;
+}
+
+.hidden {
+  display: none !important;
 }
 
 /* =============================
@@ -190,8 +199,8 @@ canvas {
     rgba(76, 201, 240, 0.18)
   );
   border: 1px solid var(--panel-border);
-  border-radius: 20px;
-  padding: 34px;
+  border-radius: 24px;
+  padding: 36px;
   width: 320px;
   text-align: center;
   backdrop-filter: blur(16px);
@@ -214,10 +223,10 @@ canvas {
    ============================= */
 
 #resultBox button {
-  margin-top: 20px;
-  padding: 10px 28px;
+  margin-top: 22px;
+  padding: 12px 32px;
   font-size: 15px;
-  border-radius: 16px;
+  border-radius: 18px;
   border: none;
   cursor: pointer;
   font-weight: 600;
@@ -236,8 +245,8 @@ canvas {
    ============================= */
 
 footer {
-  margin-top: 20px;
-  font-size: 13px;
+  margin-top: 22px;
+  font-size: 14px;
   color: var(--text-muted);
 }
 
@@ -251,15 +260,7 @@ footer a:hover {
 }
 
 /* =============================
-   HIDDEN (CRITICAL)
-   ============================= */
-
-.hidden {
-  display: none !important;
-}
-
-/* =============================
-   PRINT STYLES (PDF FRIENDLY)
+   PRINT STYLES
    ============================= */
 
 @media print {
@@ -267,18 +268,73 @@ footer a:hover {
     background: white !important;
     animation: none !important;
     color: black !important;
+    font-family: -apple-system, BlinkMacSystemFont,
+                 "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
   }
 
   header,
   #menu,
   #topActions,
-  #resultOverlay,
-  footer {
+  footer,
+  #resultOverlay {
     display: none !important;
   }
 
-  canvas {
+  #mazeCanvas {
+    display: block !important;
     box-shadow: none !important;
     border-radius: 0;
+  }
+}
+
+/* =============================
+   PRINT BUTTON VISIBILITY
+   ============================= */
+
+/* Hidden until maze is generated (JS will show it) */
+#printBtn {
+  display: none;
+}
+/* =============================
+   PRINT: MAZE + GUIDE (2 PAGES)
+   ============================= */
+
+.print-only {
+  display: none;
+}
+
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+    animation: none !important;
+    font-family: -apple-system, BlinkMacSystemFont,
+                 "SF Pro Text", "SF Pro Display",
+                 "Helvetica Neue", Arial, sans-serif;
+  }
+
+  header,
+  #menu,
+  #topActions,
+  footer,
+  #resultOverlay {
+    display: none !important;
+  }
+
+  /* PAGE 1 — Maze */
+  #mazeCanvas {
+    display: block !important;
+    page-break-after: always;
+    box-shadow: none !important;
+    border-radius: 0;
+  }
+
+  /* PAGE 2 — Guide */
+  .print-only {
+    display: block;
+    page-break-before: always;
+    max-width: 800px;
+    margin: auto;
+    line-height: 1.6;
   }
 }

@@ -1,3 +1,7 @@
+/* =============================
+   DOM REFERENCES
+   ============================= */
+
 const canvas = document.getElementById("mazeCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -12,9 +16,11 @@ const printBtn = document.getElementById("printBtn");
    INITIAL STATE
    ============================= */
 
-if (overlay) overlay.classList.add("hidden");
+overlay.classList.add("hidden");
+canvas.style.display = "none";
+printBtn.style.display = "none";
 
-let maze;
+let maze = null;
 let cellSize = 25;
 let currentLevel = null;
 
@@ -41,33 +47,28 @@ const difficultyMultiplier = {
 };
 
 /* =============================
-   EVENTS
+   EVENT LISTENERS
    ============================= */
 
-// Difficulty buttons
+// Difficulty selection
 document.querySelectorAll("#menu button").forEach(button => {
   button.addEventListener("click", () => {
     startGame(button.dataset.level);
   });
 });
 
-// Replay
+// Replay button
 replayBtn.addEventListener("click", () => {
   overlay.classList.add("hidden");
   gameFinished = false;
   startGame(currentLevel);
 });
 
-// PRINT / PDF
-if (printBtn) {
-  printBtn.addEventListener("click", () => {
-    if (!maze) {
-      alert("Please generate a maze before printing.");
-      return;
-    }
-    window.print(); // Opens system print dialog / Save as PDF
-  });
-}
+// Print button (Maze page 1 + Guide page 2)
+printBtn.addEventListener("click", () => {
+  if (!maze) return; // safety guard
+  window.print();
+});
 
 /* =============================
    GAME SETUP
@@ -89,7 +90,10 @@ function startGame(level) {
   lastCell = null;
   pathPoints = [];
 
+  canvas.style.display = "block";
+  printBtn.style.display = "inline-flex";
   overlay.classList.add("hidden");
+
   drawAll();
 }
 
@@ -119,7 +123,7 @@ function drawMaze() {
   });
 }
 
-/* === GLOWING MOUSE PATH === */
+// Glowing mouse path
 function drawPath() {
   if (pathPoints.length < 2) return;
 
@@ -276,6 +280,7 @@ function resetGame() {
   gameStarted = false;
   lastCell = null;
   pathPoints = [];
+  printBtn.style.display = "none";
   drawAll();
 }
 

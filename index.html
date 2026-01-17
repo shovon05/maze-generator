@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Maze Generator</title>
 
-  <!-- Modern macOS-like font -->
+  <!-- macOS / iOS system font -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -13,7 +13,6 @@
     rel="stylesheet"
   />
 
-  <!-- Main stylesheet -->
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -28,11 +27,15 @@
   </header>
 
   <!-- =============================
-       TOP ACTIONS (PRINT + GUIDE)
+       TOP ACTIONS
        ============================= -->
   <div id="topActions">
+    <!-- Hidden by default via CSS / JS -->
     <button id="printBtn" title="Print Maze">🖨️ Print</button>
-    <a href="guide.html" id="guideLink" target="_blank">📘 How to Solve</a>
+
+    <a href="guide.html" id="guideLink" target="_blank">
+      📘 How to Solve
+    </a>
   </div>
 
   <!-- =============================
@@ -45,14 +48,15 @@
   </nav>
 
   <!-- =============================
-       GAME CANVAS
+       GAME AREA
        ============================= -->
   <main>
+    <!-- Canvas exists but will be hidden until maze is generated -->
     <canvas id="mazeCanvas" aria-label="Maze canvas"></canvas>
   </main>
 
   <!-- =============================
-       RESULT OVERLAY (HIDDEN)
+       RESULT OVERLAY
        ============================= -->
   <div id="resultOverlay" class="hidden" aria-hidden="true">
     <div id="resultBox" role="dialog" aria-modal="true">
@@ -70,8 +74,8 @@
   <footer>
     <p>
       Built by <strong>Shovon</strong> ·
-      <a href="https://shovon05.github.io/maze-generator/" target="_blank">
-        Project Website
+      <a href="https://github.com/shovon05" target="_blank">
+        GitHub Profile
       </a>
     </p>
   </footer>
@@ -81,6 +85,40 @@
        ============================= -->
   <script src="maze.js"></script>
   <script src="script.js"></script>
+<!-- =============================
+     PRINT-ONLY GUIDE (PAGE 2)
+     ============================= -->
+<div id="printGuide" class="print-only">
+  <h1>Maze Solving Rulebook</h1>
+
+  <h3>Purpose</h3>
+  <p>
+    Identify a continuous, valid path from the designated start point
+    to the designated exit point while strictly following the rules.
+  </p>
+
+  <h3>Rules</h3>
+  <ul>
+    <li>Start from the green cell</li>
+    <li>Finish at the red cell</li>
+    <li>No wall crossing</li>
+    <li>No diagonal movement</li>
+    <li>Stay inside corridors at all times</li>
+  </ul>
+
+  <h3>Validity</h3>
+  <p>
+    A solution is valid only if it starts correctly, ends correctly,
+    and respects all movement rules.
+  </p>
+
+  <footer>
+    <p>
+      Author: <strong>Shovon</strong><br />
+      GitHub: https://github.com/shovon05
+    </p>
+  </footer>
+</div>
 
 </body>
 </html>

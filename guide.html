@@ -2,35 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Maze Solving Rulebook</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
-    rel="stylesheet"
-  />
+  <title>Maze Solving Rulebook</title>
 
   <style>
     body {
-      font-family: "Inter", sans-serif;
-      background: #f9f9fb;
+      font-family: -apple-system, BlinkMacSystemFont,
+                   "SF Pro Text", "SF Pro Display",
+                   "Helvetica Neue", Arial, sans-serif;
+      background: #ffffff;
       color: #111;
       padding: 40px;
       max-width: 900px;
       margin: auto;
-      line-height: 1.6;
-    }
-
-    h1, h2, h3 {
-      margin-top: 28px;
+      line-height: 1.65;
     }
 
     h1 {
       text-align: center;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      margin-top: 32px;
     }
 
     ul {
-      margin-left: 20px;
+      margin-left: 22px;
+    }
+
+    li {
+      margin-bottom: 6px;
     }
 
     footer {
@@ -41,6 +43,12 @@
       text-align: center;
       color: #555;
     }
+
+    @media print {
+      body {
+        padding: 20px;
+      }
+    }
   </style>
 </head>
 
@@ -48,78 +56,97 @@
 
 <h1>Maze Solving Rulebook</h1>
 
-<h3>1. Purpose of the Maze</h3>
+<h2>1. Purpose of the Maze</h2>
 <p>
 The objective of this maze is to identify a continuous, valid path from the
-<strong>designated starting point</strong> to the <strong>designated exit point</strong>
-by navigating through interconnected corridors while strictly following the defined rules.
+<strong>designated starting point</strong> to the
+<strong>designated exit point</strong> by navigating through interconnected
+corridors while strictly following the defined rules. The maze tests logical
+reasoning, spatial awareness, and problem-solving skills.
 </p>
 
-<h3>2. Maze Structure</h3>
+<h2>2. Maze Structure</h2>
 <ul>
-  <li>Interconnected pathways separated by solid walls</li>
-  <li>Uniform path width</li>
-  <li>One valid entry and one valid exit</li>
-  <li>No shortcuts or hidden paths</li>
+  <li>The maze consists of interconnected pathways separated by solid walls</li>
+  <li>All pathways are of uniform width</li>
+  <li>All walls are impassable</li>
+  <li>The maze has one valid entry point and one valid exit point</li>
+  <li>No hidden passages, movable walls, or shortcuts exist</li>
 </ul>
 
-<h3>3. Starting and Ending Rules</h3>
+<h2>3. Starting and Ending Rules</h2>
 <ul>
-  <li>Must start from the marked start</li>
-  <li>Must finish at the marked exit</li>
-  <li>Entering or exiting elsewhere is invalid</li>
+  <li>The solver must begin at the marked starting position</li>
+  <li>The solver must finish at the designated exit point</li>
+  <li>Entering the maze from any other location is not permitted</li>
+  <li>Exiting the maze at any point other than the designated exit is invalid</li>
 </ul>
 
-<h3>4. Movement Rules</h3>
+<h2>4. Movement Rules</h2>
 <ul>
-  <li>Move only through open corridors</li>
-  <li>Allowed directions: up, down, left, right</li>
-  <li>Diagonal movement is prohibited</li>
+  <li>Movement is allowed only through open pathways</li>
+  <li>The solver may move forward, backward, left, or right</li>
+  <li>Diagonal movement is strictly prohibited</li>
+  <li>The solver must remain within maze corridors at all times</li>
 </ul>
 
-<h3>5. Prohibited Actions</h3>
+<h2>5. Prohibited Actions (Don’ts)</h2>
 <ul>
-  <li>Crossing or touching walls</li>
-  <li>Skipping sections</li>
-  <li>Altering the maze</li>
-  <li>Using external aids</li>
+  <li>❌ Crossing, touching, or cutting through walls</li>
+  <li>❌ Lifting writing tools to skip sections (if physically solving)</li>
+  <li>❌ Marking or altering maze walls</li>
+  <li>❌ Creating new paths or modifying existing ones</li>
+  <li>❌ Using external aids unless explicitly allowed</li>
 </ul>
 
-<h3>6. Allowed Actions</h3>
+<h2>6. Allowed Actions (Do’s)</h2>
 <ul>
-  <li>Continuous tracing</li>
-  <li>Backtracking</li>
-  <li>Logical exploration strategies</li>
+  <li>✔ Tracing the path continuously within corridors</li>
+  <li>✔ Backtracking when a dead end is reached</li>
+  <li>✔ Pausing and resuming, provided continuity is maintained</li>
+  <li>✔ Using logical strategies such as wall-following</li>
 </ul>
 
-<h3>7. Solution Validity</h3>
+<h2>7. Solution Validity Criteria</h2>
 <p>
-A solution is valid only if it begins at the start, ends at the exit, stays within corridors,
-and respects all movement rules.
+A solution is considered valid only if:
 </p>
+<ul>
+  <li>The path begins at the official start point</li>
+  <li>The path ends at the official exit point</li>
+  <li>The path remains entirely within maze corridors</li>
+  <li>No walls are crossed or violated</li>
+  <li>All movement rules are followed</li>
+</ul>
 
-<h3>8. Time & Attempts</h3>
-<p>
-Time limits and attempt counts depend on the challenge format.
-</p>
+<h2>8. Time and Attempts</h2>
+<ul>
+  <li>The maze may be solved with or without a time limit</li>
+  <li>Multiple attempts are allowed unless stated otherwise</li>
+  <li>Only the final completed path is evaluated</li>
+</ul>
 
-<h3>9. Ethical Guidelines</h3>
-<p>
-Solve using your own reasoning. Fair play is expected.
-</p>
+<h2>9. Ethical and Fair Play Guidelines</h2>
+<ul>
+  <li>Solvers must rely on their own reasoning and skill</li>
+  <li>Copying pre-solved paths or automated solvers is discouraged</li>
+  <li>Fair play and honesty are expected</li>
+</ul>
 
-<h3>10. Conclusion</h3>
+<h2>10. Conclusion</h2>
 <p>
-This maze promotes logical thinking, patience, and disciplined exploration.
+This maze is designed to promote logical thinking, patience, and structured
+problem-solving. Successful completion depends on careful navigation,
+adherence to rules, and disciplined exploration.
 </p>
 
 <footer>
   <p>
-    Maze Generator Web App<br />
+    Maze Generator Web Application<br />
     Author: <strong>Shovon</strong><br />
-    Website:
-    <a href="https://shovon05.github.io/maze-generator/" target="_blank">
-      https://shovon05.github.io/maze-generator/
+    GitHub:
+    <a href="https://github.com/shovon05" target="_blank">
+      https://github.com/shovon05
     </a>
   </p>
 </footer>
