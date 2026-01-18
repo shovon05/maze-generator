@@ -16,10 +16,10 @@
     <p class="subtitle">🖱️ Trace the path · 🚫 Don’t touch the walls</p>
   </header>
 
-  <!-- TOP ACTIONS -->
+  <!-- TOP ACTIONS (hidden by default, shown via JS after maze generation) -->
   <div id="topActions">
-    <button id="printBtn">🖨️ Print</button>
-    <button id="guideBtn">📘 How to Solve</button>
+    <button id="printBtn" style="display:none;">🖨️ Print</button>
+    <button id="guideBtn" style="display:none;">📘 How to Solve</button>
   </div>
 
   <!-- DIFFICULTY MENU -->
@@ -29,9 +29,9 @@
     <button data-level="hard">🔴 Hard</button>
   </nav>
 
-  <!-- GAME -->
+  <!-- MAZE -->
   <main>
-    <canvas id="mazeCanvas"></canvas>
+    <canvas id="mazeCanvas" style="display:none;"></canvas>
   </main>
 
   <!-- RESULT POPUP -->
@@ -45,21 +45,23 @@
     </div>
   </div>
 
-  <!-- GUIDE POPUP -->
+  <!-- GUIDE POPUP (ONLY ONE, SAFE) -->
   <div id="guideOverlay" class="hidden">
-    <div id="guideBox">
+    <div id="guideBox" role="dialog" aria-modal="true">
       <h2>📘 How to Solve the Maze</h2>
+
+      <p>👋 Welcome! Your goal is simple:</p>
 
       <ul>
         <li>🟢 Start from the green cell</li>
         <li>🔴 Finish at the red cell</li>
         <li>➡️ Move only up, down, left, or right</li>
-        <li>🚫 Do not cross or touch walls</li>
-        <li>🔁 You may backtrack if needed</li>
+        <li>🚫 Don’t touch or cross walls</li>
+        <li>🔁 You can backtrack anytime</li>
         <li>❌ Diagonal moves are not allowed</li>
       </ul>
 
-      <p>✅ A solution is valid only if all rules are followed.</p>
+      <p>✅ Stay inside the paths and reach the exit.</p>
 
       <button id="closeGuideBtn">❌ Close</button>
     </div>
@@ -67,12 +69,11 @@
 
   <!-- FOOTER -->
   <footer>
-    <p>
-      👨‍💻 Built by <strong>Shovon</strong> ·
-      <a href="https://github.com/shovon05" target="_blank">🐙 GitHub</a>
-    </p>
+    👨‍💻 Built by <strong>Shovon</strong> ·
+    <a href="https://github.com/shovon05" target="_blank">🐙 GitHub</a>
   </footer>
 
+  <!-- SCRIPTS -->
   <script src="maze.js"></script>
   <script src="script.js"></script>
 </body>
