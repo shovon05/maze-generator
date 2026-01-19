@@ -1,276 +1,210 @@
 /* =============================
    RESET & BASE
    ============================= */
-
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent; /* Remove mobile tap color */
 }
-
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-}
-
-/* =============================
-   ROOT COLORS
-   ============================= */
 
 :root {
   --pink: #ff6ec7;
   --blue: #4cc9f0;
-  --glass: rgba(255, 255, 255, 0.15);
-  --border: rgba(255, 255, 255, 0.25);
-  --text-main: #f5f7ff;
-  --text-muted: #b8c0ff;
+  --purple: #7209b7;
+  --glass: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --text-main: #ffffff;
+  --text-muted: #aeb8c4;
 }
 
-/* =============================
-   BODY
-   ============================= */
-
 body {
-  font-family: -apple-system, BlinkMacSystemFont,
-               "SF Pro Text", "SF Pro Display",
-               "Helvetica Neue", Arial, sans-serif;
-
-  background: linear-gradient(
-    -45deg,
-    #1b103a,
-    #2a145f,
-    #0b3c5d
-  );
-  background-size: 400% 400%;
-  animation: gradientFlow 16s ease infinite;
-
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: radial-gradient(circle at top left, #1b103a, #0b0f19);
   color: var(--text-main);
-
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  /* Prevent bounce on mobile */
+  overscroll-behavior: none; 
 }
 
 /* =============================
-   BACKGROUND ANIMATION
+   TYPOGRAPHY & UI
    ============================= */
-
-@keyframes gradientFlow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* =============================
-   HEADER
-   ============================= */
-
-header {
-  text-align: center;
-  margin-bottom: 16px;
-}
-
 h1 {
   margin: 0;
-  font-size: 36px;
-  font-weight: 600;
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  background: linear-gradient(to right, var(--pink), var(--blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .subtitle {
-  margin-top: 6px;
+  margin: 8px 0 20px 0;
   color: var(--text-muted);
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+button {
+  font-family: inherit;
+  font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* =============================
-   TOP ACTIONS
+   MENUS & BUTTONS
    ============================= */
-
-#topActions {
+#menu, #topActions {
   display: flex;
   gap: 12px;
-  margin-bottom: 16px;
-}
-
-#topActions button {
-  padding: 10px 20px;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-  background: var(--glass);
-  color: var(--text-main);
-  cursor: pointer;
-  backdrop-filter: blur(12px);
-  font-size: 14px;
-  transition: transform 0.2s ease, background 0.2s ease;
-}
-
-#topActions button:hover {
-  background: linear-gradient(135deg, var(--pink), var(--blue));
-  color: #000;
-  transform: translateY(-2px);
-}
-
-/* =============================
-   DIFFICULTY MENU
-   ============================= */
-
-#menu {
-  display: flex;
-  gap: 14px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-#menu button {
-  padding: 12px 28px;
-  border-radius: 18px;
-  border: none;
+#menu button, #topActions button {
+  padding: 10px 24px;
+  border-radius: 50px;
+  border: 1px solid var(--glass-border);
   background: var(--glass);
   color: var(--text-main);
-  font-size: 16px;
   cursor: pointer;
-  backdrop-filter: blur(12px);
-  transition: transform 0.2s ease, background 0.2s ease;
+  backdrop-filter: blur(10px);
+  font-size: 0.9rem;
 }
 
-#menu button:hover {
-  background: linear-gradient(135deg, var(--pink), var(--blue));
-  color: #000;
+#menu button:hover, #topActions button:hover {
+  background: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
+  border-color: var(--blue);
 }
 
 /* =============================
    CANVAS
    ============================= */
-
 #mazeCanvas {
-  display: none;
-  background: #ffffff;
-  border-radius: 22px;
-  box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+  display: none; /* Hidden until game starts */
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  max-width: 100%;
+  cursor: crosshair;
 }
 
 /* =============================
-   RESULT OVERLAY
+   MOBILE CONTROLS (JOYSTICK)
    ============================= */
-
-#resultOverlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.65);
-  backdrop-filter: blur(12px);
-  display: flex;
-  align-items: center;
+#controls {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 65px); /* 3 columns */
+  grid-template-rows: repeat(2, 65px);    /* 2 rows */
+  gap: 8px;
   justify-content: center;
-  z-index: 1000;
-}
-
-/* =============================
-   GUIDE OVERLAY
-   ============================= */
-
-#guideOverlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.75);
-  display: flex;
   align-items: center;
-  justify-content: center;
-  z-index: 1001;
 }
 
-/* =============================
-   HIDDEN UTILITY
-   ============================= */
+/* Hide these by default, shown via JS */
+.hidden { display: none !important; }
 
-.hidden {
-  display: none !important;
-}
-
-/* =============================
-   POPUP BOXES
-   ============================= */
-
-#resultBox,
-#guideBox {
-  background: var(--glass);
+.d-pad {
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
   border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.1); /* Glass effect */
+  color: white;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  transition: all 0.1s;
+}
+
+.d-pad:active {
+  background: var(--blue);
+  transform: scale(0.92);
+  box-shadow: 0 2px 10px rgba(76, 201, 240, 0.5);
+}
+
+/* Grid Positioning for Joystick Shape */
+#btnUp    { grid-column: 2; grid-row: 1; border-radius: 18px 18px 5px 5px; }
+#btnLeft  { grid-column: 1; grid-row: 2; border-radius: 18px 5px 5px 18px; }
+#btnDown  { grid-column: 2; grid-row: 2; border-radius: 5px 5px 18px 18px; }
+#btnRight { grid-column: 3; grid-row: 2; border-radius: 5px 18px 18px 5px; }
+
+/* =============================
+   POPUPS
+   ============================= */
+.hidden { display: none !important; }
+
+#resultOverlay, #guideOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+
+#resultBox, #guideBox {
+  background: linear-gradient(145deg, rgba(30,30,40,0.9), rgba(20,20,30,0.95));
+  border: 1px solid var(--glass-border);
   border-radius: 24px;
-  padding: 32px;
-  width: 320px;
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
   text-align: center;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 35px 70px rgba(0,0,0,0.6);
+  color: white;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+}
+
+.stats-grid {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
+  font-size: 1.1rem;
 }
 
 #guideBox ul {
   text-align: left;
-  margin-top: 12px;
+  line-height: 1.8;
+  padding-left: 20px;
+  color: var(--text-muted);
 }
 
-/* =============================
-   POPUP BUTTONS
-   ============================= */
-
-#resultBox button,
-#guideBox button {
-  margin-top: 18px;
-  padding: 12px 28px;
-  border-radius: 16px;
+#resultBox button, #guideBox button {
+  margin-top: 20px;
+  padding: 14px 32px;
+  border-radius: 50px;
   border: none;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
   cursor: pointer;
-  font-weight: 600;
-  background: linear-gradient(135deg, var(--pink), var(--blue));
-  color: #000;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-#resultBox button:hover,
-#guideBox button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 32px rgba(255,110,199,0.5);
+  box-shadow: 0 10px 20px rgba(76, 201, 240, 0.3);
 }
 
 /* =============================
    FOOTER
    ============================= */
-
 footer {
-  margin-top: 18px;
-  font-size: 14px;
+  margin-top: auto;
+  padding-top: 30px;
+  font-size: 0.8rem;
   color: var(--text-muted);
 }
-
-footer a {
-  color: var(--blue);
-  text-decoration: none;
-}
-
-footer a:hover {
-  text-decoration: underline;
-}
-
-/* =============================
-   PRINT STYLES
-   ============================= */
-
-@media print {
-  body {
-    background: #ffffff !important;
-    animation: none !important;
-    color: #000 !important;
-  }
-
-  header,
-  #menu,
-  #topActions,
-  footer,
-  #resultOverlay,
-  #guideOverlay {
-    display: none !important;
-  }
-
-  #mazeCanvas {
-    display: block !important;
-    box-shadow: none !important;
-    border-radius: 0;
-  }
-}
+footer a { color: var(--blue); text-decoration: none; }
