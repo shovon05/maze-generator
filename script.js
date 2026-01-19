@@ -1,221 +1,261 @@
 /* =============================
    DOM REFERENCES
    ============================= */
-
 const canvas = document.getElementById("mazeCanvas");
 const ctx = canvas.getContext("2d");
 
+// UI Elements
 const printBtn = document.getElementById("printBtn");
 const guideBtn = document.getElementById("guideBtn");
-
+const controlsPanel = document.getElementById("controls");
 const guideOverlay = document.getElementById("guideOverlay");
-const guideBox = document.getElementById("guideBox");
-const closeGuideBtn = document.getElementById("closeGuideBtn");
-
 const resultOverlay = document.getElementById("resultOverlay");
-const replayBtn = document.getElementById("replayBtn");
 const timeText = document.getElementById("timeText");
 const scoreText = document.getElementById("scoreText");
 const highScoreText = document.getElementById("highScoreText");
 
 /* =============================
-   INITIAL STATE
+   GAME STATE
    ============================= */
-
-canvas.style.display = "none";
-printBtn.style.display = "none";
-guideBtn.style.display = "none";
-guideOverlay.classList.add("hidden");
-resultOverlay.classList.add("hidden");
-
-/* =============================
-   GAME VARIABLES
-   ============================= */
-
 let maze = null;
-let cellSize = 25;
-let currentLevel = null;
+let cellSize = 0;
+let currentLevel = "easy";
 let startTime = 0;
 let gameFinished = false;
+let gameInterval = null;
+
+// Player Position
+let player = { row: 0, col: 0 };
 
 const levels = {
   easy: 10,
   medium: 20,
-  hard: 40
+  hard: 30 // Reduced slightly for better mobile visibility
 };
 
-const difficultyMultiplier = {
+// Multipliers for scoring
+const difficultyBonus = {
   easy: 1,
-  medium: 2,
-  hard: 3
+  medium: 1.5,
+  hard: 2.5
 };
 
 /* =============================
-   GUIDE MODAL LOGIC
+   INITIALIZATION
    ============================= */
 
-// Open guide
-guideBtn.addEventListener("click", () => {
-  guideOverlay.classList.remove("hidden");
+// Event: Difficulty Buttons
+document.querySelectorAll("#menu button").forEach(btn => {
+  btn.addEventListener("click", () => startGame(btn.dataset.level));
 });
 
-// Close guide button
-closeGuideBtn.addEventListener("click", closeGuide);
-
-// Click outside to close
-guideOverlay.addEventListener("click", (e) => {
-  if (e.target === guideOverlay) closeGuide();
+// Event: Replay
+document.getElementById("replayBtn").addEventListener("click", () => {
+  resultOverlay.classList.add("hidden");
+  startGame(currentLevel);
 });
 
-// ESC key to close
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && !guideOverlay.classList.contains("hidden")) {
-    closeGuide();
-  }
-});
+// Event: Guide
+guideBtn.addEventListener("click", () => guideOverlay.classList.remove("hidden"));
+document.getElementById("closeGuideBtn").addEventListener("click", () => guideOverlay.classList.add("hidden"));
 
-function closeGuide() {
-  guideOverlay.classList.add("hidden");
-}
+// Event: Print
+printBtn.addEventListener("click", () => window.print());
 
 /* =============================
-   DIFFICULTY SELECTION
-   ============================= */
-
-document.querySelectorAll("#menu button").forEach(button => {
-  button.addEventListener("click", () => {
-    startGame(button.dataset.level);
-  });
-});
-
-/* =============================
-   GAME SETUP
+   GAME LOOP
    ============================= */
 
 function startGame(level) {
   currentLevel = level;
   gameFinished = false;
+  player = { row: 0, col: 0 }; // Reset player to start
 
+  // 1. Calculate Canvas Size (Responsive)
   const size = levels[level];
-  cellSize = Math.floor(600 / size);
+  const screenWidth = window.innerWidth - 40; // 20px padding each side
+  const maxCanvasWidth = 600;
+  
+  // Fit canvas to screen or max width
+  const totalWidth = Math.min(screenWidth, maxCanvasWidth);
+  cellSize = Math.floor(totalWidth / size);
 
-  canvas.width = size * cellSize;
-  canvas.height = size * cellSize;
+  canvas.width = cellSize * size;
+  canvas.height = cellSize * size;
 
-  maze = new Maze(size, size);
+  // 2. Generate Maze
+  maze = new Maze(size, size); // Uses your existing maze.js class
 
+  // 3. Show UI
   canvas.style.display = "block";
+  controlsPanel.classList.remove("hidden");
+  controlsPanel.style.display = "flex"; // Ensure flex display
+  printBtn.classList.remove("hidden");
   printBtn.style.display = "inline-flex";
+  guideBtn.classList.remove("hidden");
   guideBtn.style.display = "inline-flex";
-
+  
+  // 4. Start Timer
   startTime = Date.now();
-  resultOverlay.classList.add("hidden");
-
-  drawMaze();
+  if (gameInterval) clearInterval(gameInterval);
+  
+  // 5. Initial Draw
+  drawGame();
 }
 
 /* =============================
-   DRAWING
+   RENDERING
    ============================= */
 
-function drawMaze() {
+function drawGame() {
+  if (!maze) return;
+
+  // Clear Canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.strokeStyle = "#000";
+
+  // 1. Draw Maze Walls
+  ctx.strokeStyle = "#1b103a"; // Dark blue walls
   ctx.lineWidth = 2;
+  ctx.lineCap = "round";
 
   maze.grid.forEach(cell => {
     const x = cell.col * cellSize;
     const y = cell.row * cellSize;
 
-    if (cell.walls.top) drawLine(x, y, x + cellSize, y);
-    if (cell.walls.right) drawLine(x + cellSize, y, x + cellSize, y + cellSize);
-    if (cell.walls.bottom) drawLine(x + cellSize, y + cellSize, x, y + cellSize);
-    if (cell.walls.left) drawLine(x, y + cellSize, x, y);
+    ctx.beginPath();
+    if (cell.walls.top) { ctx.moveTo(x, y); ctx.lineTo(x + cellSize, y); }
+    if (cell.walls.right) { ctx.moveTo(x + cellSize, y); ctx.lineTo(x + cellSize, y + cellSize); }
+    if (cell.walls.bottom) { ctx.moveTo(x + cellSize, y + cellSize); ctx.lineTo(x, y + cellSize); }
+    if (cell.walls.left) { ctx.moveTo(x, y + cellSize); ctx.lineTo(x, y); }
+    ctx.stroke();
   });
 
-  // Start (green)
-  ctx.fillStyle = "green";
-  ctx.fillRect(2, 2, cellSize - 4, cellSize - 4);
+  // 2. Draw Start (Green)
+  ctx.fillStyle = "#2ecc71";
+  ctx.fillRect(4, 4, cellSize - 8, cellSize - 8);
 
-  // End (red)
-  ctx.fillStyle = "red";
+  // 3. Draw Goal (Red)
+  ctx.fillStyle = "#e74c3c";
   ctx.fillRect(
-    (maze.cols - 1) * cellSize + 2,
-    (maze.rows - 1) * cellSize + 2,
-    cellSize - 4,
-    cellSize - 4
+    (maze.cols - 1) * cellSize + 4,
+    (maze.rows - 1) * cellSize + 4,
+    cellSize - 8,
+    cellSize - 8
   );
-}
 
-function drawLine(x1, y1, x2, y2) {
+  // 4. Draw Player (Blue Dot)
+  const px = player.col * cellSize + cellSize / 2;
+  const py = player.row * cellSize + cellSize / 2;
+  const radius = cellSize / 3;
+
   ctx.beginPath();
-  ctx.moveTo(x1, y1);
-  ctx.lineTo(x2, y2);
-  ctx.stroke();
+  ctx.arc(px, py, radius, 0, 2 * Math.PI);
+  ctx.fillStyle = "#4cc9f0"; // Bright Blue
+  ctx.shadowBlur = 10;
+  ctx.shadowColor = "#4cc9f0";
+  ctx.fill();
+  ctx.shadowBlur = 0; // Reset shadow
 }
 
 /* =============================
-   SIMPLE FINISH LOGIC (SAFE)
+   MOVEMENT LOGIC (COLLISION)
    ============================= */
 
+function movePlayer(dRow, dCol) {
+  if (gameFinished) return;
+
+  const currentCell = maze.grid[maze.index(player.row, player.col)];
+  const nextRow = player.row + dRow;
+  const nextCol = player.col + dCol;
+
+  // 1. Check bounds
+  if (nextRow < 0 || nextCol < 0 || nextRow >= maze.rows || nextCol >= maze.cols) return;
+
+  // 2. Check Walls (Collision Detection)
+  if (dRow === -1 && currentCell.walls.top) return;    // Moving Up
+  if (dRow === 1 && currentCell.walls.bottom) return;  // Moving Down
+  if (dCol === 1 && currentCell.walls.right) return;   // Moving Right
+  if (dCol === -1 && currentCell.walls.left) return;   // Moving Left
+
+  // 3. Move
+  player.row = nextRow;
+  player.col = nextCol;
+  drawGame();
+  checkWin();
+}
+
+/* =============================
+   INPUT HANDLERS
+   ============================= */
+
+// 1. Keyboard (PC)
+document.addEventListener("keydown", (e) => {
+  if (canvas.style.display === "none") return;
+  
+  switch(e.key) {
+    case "ArrowUp": case "w": movePlayer(-1, 0); break;
+    case "ArrowDown": case "s": movePlayer(1, 0); break;
+    case "ArrowLeft": case "a": movePlayer(0, -1); break;
+    case "ArrowRight": case "d": movePlayer(0, 1); break;
+  }
+});
+
+// 2. On-Screen Buttons (Mobile)
+document.getElementById("btnUp").addEventListener("click", () => movePlayer(-1, 0));
+document.getElementById("btnDown").addEventListener("click", () => movePlayer(1, 0));
+document.getElementById("btnLeft").addEventListener("click", () => movePlayer(0, -1));
+document.getElementById("btnRight").addEventListener("click", () => movePlayer(0, 1));
+
+// 3. Mouse Hover (Hybrid)
+// If mouse hovers a neighbor cell, move there if valid
 canvas.addEventListener("mousemove", (e) => {
-  if (!maze || gameFinished) return;
+  if (gameFinished) return;
 
   const rect = canvas.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
 
-  const col = Math.floor(x / cellSize);
-  const row = Math.floor(y / cellSize);
+  const mouseCol = Math.floor(mouseX / cellSize);
+  const mouseRow = Math.floor(mouseY / cellSize);
 
-  if (row === maze.rows - 1 && col === maze.cols - 1) {
-    finishGame();
+  // Check if mouse is exactly 1 cell away from player
+  const dRow = mouseRow - player.row;
+  const dCol = mouseCol - player.col;
+
+  // Only move if it's a direct neighbor (no diagonals, no jumps)
+  if (Math.abs(dRow) + Math.abs(dCol) === 1) {
+    movePlayer(dRow, dCol);
   }
 });
 
 /* =============================
-   END GAME
+   GAME OVER
    ============================= */
 
-function finishGame() {
-  gameFinished = true;
+function checkWin() {
+  if (player.row === maze.rows - 1 && player.col === maze.cols - 1) {
+    gameFinished = true;
+    
+    // Scoring
+    const timeTaken = (Date.now() - startTime) / 1000;
+    // Base 1000 pts - 10pts per second. Minimum 50 pts.
+    // Multiplied by difficulty bonus.
+    let baseScore = Math.max(50, 1000 - (timeTaken * 10));
+    const finalScore = Math.floor(baseScore * difficultyBonus[currentLevel]);
 
-  const timeTaken = (Date.now() - startTime) / 1000;
-  const score = Math.max(
-    0,
-    Math.floor(1000 - timeTaken * 100 * difficultyMultiplier[currentLevel])
-  );
+    timeText.innerText = `⏱️ ${timeTaken.toFixed(1)}s`;
+    scoreText.innerText = `🏆 ${finalScore}`;
 
-  timeText.textContent = `⏱️ Time: ${timeTaken.toFixed(2)}s`;
-  scoreText.textContent = `🏆 Score: ${score}`;
+    // High Score
+    const key = `maze_high_${currentLevel}`;
+    const best = localStorage.getItem(key) || 0;
+    if (finalScore > best) {
+      localStorage.setItem(key, finalScore);
+      highScoreText.innerText = "✨ New High Score!";
+    } else {
+      highScoreText.innerText = `Best: ${best}`;
+    }
 
-  const key = `mazeHighScore_${currentLevel}`;
-  const best = localStorage.getItem(key);
-
-  if (!best || score > best) {
-    localStorage.setItem(key, score);
-    highScoreText.textContent = "✨ New High Score!";
-  } else {
-    highScoreText.textContent = `Best: ${best}`;
+    resultOverlay.classList.remove("hidden");
   }
-
-  resultOverlay.classList.remove("hidden");
 }
-
-/* =============================
-   REPLAY
-   ============================= */
-
-replayBtn.addEventListener("click", () => {
-  resultOverlay.classList.add("hidden");
-  startGame(currentLevel);
-});
-
-/* =============================
-   PRINT
-   ============================= */
-
-printBtn.addEventListener("click", () => {
-  if (!maze) return;
-  window.print();
-});

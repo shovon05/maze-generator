@@ -2,78 +2,73 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🧩 Maze Generator</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>🧩 Maze Master</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
-  <!-- HEADER -->
   <header>
-    <h1>🧩 Maze Generator</h1>
-    <p class="subtitle">🖱️ Trace the path · 🚫 Don’t touch the walls</p>
+    <h1>🧩 Maze Master</h1>
+    <p class="subtitle">Navigate the path · Avoid the walls</p>
   </header>
 
-  <!-- TOP ACTIONS (hidden by default, shown via JS after maze generation) -->
   <div id="topActions">
-    <button id="printBtn" style="display:none;">🖨️ Print</button>
-    <button id="guideBtn" style="display:none;">📘 How to Solve</button>
+    <button id="printBtn" class="hidden">🖨️ Print</button>
+    <button id="guideBtn" class="hidden">📘 Help</button>
   </div>
 
-  <!-- DIFFICULTY MENU -->
   <nav id="menu">
     <button data-level="easy">🟢 Easy</button>
     <button data-level="medium">🟡 Medium</button>
     <button data-level="hard">🔴 Hard</button>
   </nav>
 
-  <!-- MAZE -->
   <main>
-    <canvas id="mazeCanvas" style="display:none;"></canvas>
+    <canvas id="mazeCanvas"></canvas>
   </main>
 
-  <!-- RESULT POPUP -->
+  <div id="controls" class="hidden">
+    <div class="control-row">
+      <button id="btnUp" class="d-pad">▲</button>
+    </div>
+    <div class="control-row">
+      <button id="btnLeft" class="d-pad">◀</button>
+      <button id="btnDown" class="d-pad">▼</button>
+      <button id="btnRight" class="d-pad">▶</button>
+    </div>
+  </div>
+
   <div id="resultOverlay" class="hidden">
     <div id="resultBox">
-      <h2>🎉 Maze Completed!</h2>
-      <p id="timeText"></p>
-      <p id="scoreText"></p>
-      <p id="highScoreText"></p>
-      <button id="replayBtn">🔄 Replay</button>
+      <h2>🎉 Completed!</h2>
+      <div class="stats-grid">
+        <p id="timeText">--</p>
+        <p id="scoreText">--</p>
+      </div>
+      <p id="highScoreText" class="highlight"></p>
+      <button id="replayBtn">🔄 Play Again</button>
     </div>
   </div>
 
-  <!-- GUIDE POPUP (ONLY ONE, SAFE) -->
   <div id="guideOverlay" class="hidden">
-    <div id="guideBox" role="dialog" aria-modal="true">
-      <h2>📘 How to Solve the Maze</h2>
-
-      <p>👋 Welcome! Your goal is simple:</p>
-
+    <div id="guideBox">
+      <h2>📘 How to Play</h2>
       <ul>
-        <li>🟢 Start from the green cell</li>
-        <li>🔴 Finish at the red cell</li>
-        <li>➡️ Move only up, down, left, or right</li>
-        <li>🚫 Don’t touch or cross walls</li>
-        <li>🔁 You can backtrack anytime</li>
-        <li>❌ Diagonal moves are not allowed</li>
+        <li>🟢 <strong>Start</strong> at Green · 🔴 <strong>End</strong> at Red</li>
+        <li>💻 <strong>PC:</strong> Use Arrow Keys or Mouse</li>
+        <li>📱 <strong>Mobile:</strong> Use the On-Screen Buttons</li>
+        <li>🚫 <strong>Rules:</strong> Don't hit walls. No diagonals.</li>
       </ul>
-
-      <p>✅ Stay inside the paths and reach the exit.</p>
-
-      <button id="closeGuideBtn">❌ Close</button>
+      <button id="closeGuideBtn">Got it!</button>
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer>
-    👨‍💻 Built by <strong>Shovon</strong> ·
-    <a href="https://github.com/shovon05" target="_blank">🐙 GitHub</a>
+    <p>Designed by <strong>Shovon</strong> · <a href="https://github.com/shovon05" target="_blank">GitHub</a></p>
   </footer>
 
-  <!-- SCRIPTS -->
   <script src="maze.js"></script>
   <script src="script.js"></script>
 </body>
